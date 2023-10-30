@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 int main(){
@@ -8,29 +9,24 @@ int main(){
    for(int t=1 ; t <=T; t++){
       long long n, c;
       cin>>n>>c;
-      vector<long long> npeople(n);
-      long long total=0;
-      for(auto &i:npeople){
-	      cin>>i; total+=i;
+      vector<long long> a(n), p(n);
+      for(int i = 0 ; i < n; i++){
+	      cin>>a[i];
+	      p[i]=i;
       }
-      vector<bool>marked(n+1, false);
-      priority_queue<pair<long long, long long> >q; q.push({0LL,1});
-      int used=0;
-      long long cost=0;
-      while(!q.empty()){
-	   auto node = q.top();q.pop();
-	   if(marked[node.second])continue;
-	   marked[node.second]=true;
-	   used++;
-	   cost += -node.first;
-	   for(int _to = 1; _to <= n; _to++){
-	      if(marked[_to])continue;
-	      if(1LL*node.second*_to*c > total)continue;
-	      q.push({-(node.second*_to), _to});
-	   }
+      sort(p.begin(), p.end(), [&] (const int &u, const int &v){
+		      return (1LL*(u+1LL)*c - a[u]) < (1LL*(v+1LL)*c - a[v]);
+           });
+      bool hassol=true;
+      long long sum = a.front(); //we already have the first one!
+      for(int i = 0 ; i < n && hassol; i++){
+	      int u = p[i];
+	      if(u==0)continue; //skip first node
+	      if((u+1LL)*c > sum+a[u]) hassol=false;
+	      sum +=a[u];
       }
-      if(used==n)cout<<"YES\n";
-      else cout <<"NO\n";
+      if(hassol)cout<<"YES\n";
+      else cout<<"NO\n";
    }
    return 0;
 }
