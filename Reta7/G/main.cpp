@@ -33,7 +33,7 @@ int lca(int u, int v){//retrieve the lowest common ancester between u and v
    }
    return up[u][0];
 }
-int OR(int u, int dis){
+int OR(int u, int dis){ //bit jumps...
    int res = a[u];
    for(int j = 0 ; j < bits; j++)
       if(dis & (1<<j)) res |= r[u][j], u=up[u][j];
