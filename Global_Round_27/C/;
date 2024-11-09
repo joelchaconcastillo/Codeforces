@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main(){
+   ios::sync_with_stdio(0);
+   cin.tie(0);
+   int T;
+   cin>>T;
+   while(T--){
+     int n;  cin >>n;
+     vector<int> res(n);
+     int leftBit = 0;
+     for(int i = 0 ; i < 32; i++) if(n&(1<<i)) leftBit=i;
+
+     if(n&1){
+
+     }else{
+
+     }
+
+   }
+   return 0;
+}
