@@ -1,90 +1,63 @@
-#include <bits/stdc++.h>
 #include <iostream>
-#include <map>
-#include <tuple>
+#include <bits/stdc++.h>
 using namespace std;
 const int maxn = 2e5+5;
-int n, k, arr[maxn], A, B, p[maxn];
-map<int, int> pos;
-vector<tuple<int, int, int> > V;
-void do_operation(int a, int b, int x){
-  arr[a] -=x;
-  arr[b] +=x;
-  V.push_back({a,b,x});
-}
-void setvalue(int pos ,int b, int target){
-  if(arr[pos]==target) return;
-  int dif = target-arr[pos];
-  do_operation(b,pos, dif);
-}
-void _swap(int x, int y){
-  int vx = arr[x], vy = arr[y];
-  setvalue(A,B,k-vx);
-  setvalue(x,A,vy);
-  setvalue(y,A,vx);
-}
-bool cmp(int a, int b){
-   return arr[a]<arr[b];
-}
+int arr[maxn], idx[maxn];
 void solve(){
-   pos.clear();
-   V.clear();
-   A=B=-1;
-   cin>>n>>k;
-   for(int i =1 ; i <=n; i++)cin>>arr[i];
+  int n, q;
+  cin >> n >> q;
 
-   bool issorted=true;
-   for(int i = 2 ;i<=n; i++){
-      if(arr[i] < arr[i-1]) issorted=false;
-   }
-   if(issorted){
-      cout << "0\n";
-      return;
-   }
-
-   for(int i=1; i<=n; i++){
-      if(pos.find(k-arr[i])!=pos.end()){
-	     B=i; A=pos[k-arr[i]];
-	     break;
-      }
-      pos[arr[i]]=i;
-   }
-   if(A==-1){
-	   cout << "-1\n";
-	   return;
-   }
-   if(A!=1){
-	  setvalue(A,B,k-arr[1]);
-	  setvalue(1,A,k-arr[B]);
-	  A=1;
-   }
-   if(B!=n){
-	   setvalue(B,A,k-arr[n]);
-	   setvalue(n,B,k-arr[A]);
-	   B=n;
-   }
-   vector<int> invp;
-   for(int i = 2; i<n; i++)invp.push_back(i);
-   sort(invp.begin(), invp.end(), cmp);
-   for(int i = 0 ; i<invp.size(); i++)
-	   p[invp[i]]=i+2;
-   for(int i = 2; i<n; i++){
-	if(p[i]==i)continue;
-	_swap(p[i], i);
-	swap(p[p[i]],p[i]);
-	i--;
-   }
-   setvalue(B,A,k);
-   cout << V.size() << "\n";
-   for(auto [a,b,x]:V)
-	   cout << a<<" "<<b<<" "<<x<<"\n";
-   return;
+  for(int i = 1; i <= n; i++){
+	  cin >> arr[i];
+	  idx[arr[i]] = i;
+  }
+  for(int i = 0 ;i  < q; i++){
+     int l, r, k;
+     cin >> l >> r >>k;
+     if(idx[k] > r || idx[k] <l){
+	   cout << -1<<" ";
+	   continue;
+     }
+     int big = n-k, small = k-1;
+     int needBig=0, needSmall=0;
+     int bigAv = n-k, smallAv = k-1;
+     int lo = l, hi =r;
+     while(lo<=hi){
+	int mid = (lo+hi)/2;
+	if(arr[mid]==k)break;
+	if(mid < idx[k]){
+	   if(k < arr[mid]) needSmall++;// to be fixed
+	   else smallAv--;
+	   small--;
+	   lo=mid+1;
+	}else{
+	   if(k > arr[mid]) needBig++;// to be fixed
+	   else bigAv--;
+	   big--;
+	   hi=mid-1;
+	}
+     }
+     if(big < 0 || small <0){
+	cout << -1 << " ";
+	continue;
+     }
+     int res = 2*min(needBig, needSmall);
+     int diff = abs(needBig - needSmall);
+     if(needBig > needSmall){
+	if(bigAv < diff)cout <<-1 <<" ";
+	else cout << res+2*diff << " ";
+     }else{
+	if(smallAv < diff) cout << -1 <<" ";
+	else cout <<res+2*diff<<" ";
+     }
+  }
 }
 int main(){
-  int T;
-  cin>>T;
-  while(T--){
-	 solve();
-  }
-  return 0;
+   int T;
+   cin  >> T;
+   while(T--){
+      solve();
+      cout << endl;
+   }
+   return 0;
 }
