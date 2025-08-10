@@ -1,21 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
+void update(long long &a, long long &b){
+	if(b < a) a=b;
+}
 void solve(){
 	int n, m;
 	cin>>n>>m;
-	unordered_map<int, vector<int> >edgeList;
-	vector<int> deg(n,0);
-	for(int i = 0 ; i < m; i++){
-		int _from, _to;
-		cin >> _from >> _to;
-		_from--;
-		_to--;
-		edgeList[_from].push_back(_to);
-		deg[_to]++;
+	unordered_map<int, vector<int> >edgeList(n+1);
+	while(m--){
+		int a, b;
+		cin >>a >>b;
+		edgeList[a].push_back(b);
+		edgeList[b].push_back(a);
 	}
-	typedef tuple<int, int> my_type;
-	priority_queue<my_type, vector<my_type>, greater<>> pq;
-	vector<
+	int t = 0;
+	vector<long long> d(n+2,INT_MAX);
+	auto nd = d;
+	d[1] = 0;
+	while(d[n]>=INT_MAX){
+		for(int i = 1; i <=n; i++) nd[i] = d[i]+1;
+		for(int i = 1; i <=n; i++){
+			update(nd[edgeList[i][t%edgeList[i].size()]], d[i]);
+		}
+		d = nd;
+		t++;
+	}
+	cout << t <<" "<<d[n]<<endl;
 }
 int main(){
         int T; cin>> T;
